@@ -11,6 +11,18 @@ var (
 	ErrNotFound = errors.New("the requested resource is not found")
 )
 
+// Repository represent the file's repository contract
+type Repository interface {
+	Get(uuid uuid.UUID) (File, error)
+	Set(file File) error
+}
+
+// Usecase represent the file's usecases
+type Usecase interface {
+	Get(uuid uuid.UUID) (File, error)
+	Set(file File) error
+}
+
 // File represent UUID and URL of file paired
 type File struct {
 	uuid uuid.UUID
@@ -27,14 +39,12 @@ func (f File) URL() string {
 	return f.url
 }
 
-// Repository represent the file's repository contract
-type Repository interface {
-	Get(uuid uuid.UUID) (File, error)
-	Set(file File) error
+func (f File) IsValid() bool {
+	// Perform url validation
+	return false
 }
 
-// Usecase represent the file's usecases
-type Usecase interface {
-	Get(uuid uuid.UUID) (File, error)
-	Set(file File) error
+func (f File) IsCSVFormat() bool {
+	// Perform file validation
+	return false
 }

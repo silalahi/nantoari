@@ -9,3 +9,4 @@ Simple CSV to API instantly
 - Generating UUID as key
 - Saving UUID and file URL in Redis
 - Create handler that accept CSV location (HTTP URL), parse the CSV and return as JSON
+- Simple middleware to store hit / request
