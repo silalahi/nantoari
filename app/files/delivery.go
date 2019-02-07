@@ -40,14 +40,14 @@ func (h *HTTPHandler) Get(c echo.Context) error {
 	param := c.Param("uuid")
 	id, err := uuid.Parse(param)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, map[string]string{
+		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),
 		})
 	}
 
 	file, err := h.u.Get(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, map[string]string{
+		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),
 		})
 	}
@@ -76,7 +76,7 @@ func (h *HTTPHandler) Set(c echo.Context) (err error) {
 	// TODO: some validation
 
 	if err := h.u.Set(file); err != nil {
-		c.JSON(http.StatusInternalServerError, map[string]string{
+		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),
 		})
 	}

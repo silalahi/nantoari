@@ -22,7 +22,7 @@ func NewRedisRepository(conn *redis.Client) Repository {
 func (r *redisRepository) Get(uuid uuid.UUID) (File, error) {
 	url, err := r.conn.Get(uuid.String()).Result()
 	if err != nil {
-		return File{}, err
+		return File{}, ErrNotFound
 	}
 
 	return File{
