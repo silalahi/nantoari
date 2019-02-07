@@ -3,6 +3,7 @@ Simple CSV to API instantly
 
 
 # TODO
+- Config
 - Handler to accept file URL
 - Perform some validation if the given file URL is valid, and has CSV format?
 - Generating UUID as key
