@@ -5,12 +5,15 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	validator "gopkg.in/go-playground/validator.v9"
 )
+
+var v = validator.New()
 
 type (
 	// HTTP Request
 	request struct {
-		URL string `json:"url" form:"url" query:"url"`
+		URL string `json:"url" form:"url" query:"url" validate:"required"`
 	}
 
 	// HTTP Response
@@ -40,25 +43,26 @@ func (h *HTTPHandler) Get(c echo.Context) error {
 	param := c.Param("uuid")
 	id, err := uuid.Parse(param)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": err.Error(),
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"message": ErrInvalidUUID.Error(),
 		})
 	}
 
 	file, err := h.u.Get(id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": err.Error(),
+		return c.JSON(http.StatusNotFound, map[string]string{
+			"message": err.Error(),
 		})
 	}
 
-	// TODO: converting CSV to JSON
-
-	res := response{
-		URL: file.URL(),
+	result, err := file.Parse()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, result)
 }
 
 // Set handles POST request
@@ -67,17 +71,24 @@ func (h *HTTPHandler) Set(c echo.Context) (err error) {
 	if err = c.Bind(req); err != nil {
 		return
 	}
+	if err = v.Struct(req); err != nil {
+		return
+	}
 
 	file := File{
 		url:  req.URL,
 		uuid: uuid.New(),
 	}
 
-	// TODO: some validation
+	if !file.IsCSV() {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"message": ErrInvalidFileFormat.Error(),
+		})
+	}
 
 	if err := h.u.Set(file); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": err.Error(),
+			"message": err.Error(),
 		})
 	}
 

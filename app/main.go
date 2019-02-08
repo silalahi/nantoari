@@ -2,9 +2,8 @@ package main
 
 import (
 	"github.com/go-redis/redis"
-	"github.com/silalahi/nantoari/app/files"
-
 	"github.com/labstack/echo/v4"
+	"github.com/silalahi/nantoari/app/files"
 )
 
 func main() {
