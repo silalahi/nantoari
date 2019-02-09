@@ -3,7 +3,7 @@ services:
   redis:
     image: redis
   nantoari:
-    build: .
+    image: jhes/nantoari
     ports:
     - "8080:8080"
     links:
