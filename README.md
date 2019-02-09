@@ -1,10 +1,12 @@
-# Nantoari
-Simple CSV to API instantly
+# nantoari
+> Currently, nantoari is in highly development process. Some API may breaks. Do not use for production, yet.
 
-# How to Use
-- TODO
+:zap: Simple CSV to API ready, instantly!
 
+<p align="center">
+  <script src="https://asciinema.org/a/226316.js" id="asciicast-226316" async></script>
+</p>
 
-# TODO
-- Would be better if nantoari has config (either flag or file base)
-- Simple middleware to store total hit or request (store in Redis, maybe?)
+##### And here are some ideas:
+- Configurable (either flag or file base).
+- Simple middleware to store total hit or request in Redis
