@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/silalahi/nantoari/store"
 	"gopkg.in/yaml.v2"
 )
 
@@ -27,8 +28,9 @@ type Server struct {
 
 // Config is a struct to load application configuration
 type Config struct {
-	Debug  bool    `yaml:"debug"`
-	Server *Server `yaml:"server"`
+	Debug  bool          `yaml:"debug"`
+	Server *Server       `yaml:"server"`
+	Store  *store.Config `yaml:"store"`
 }
 
 // Default returns a default config instance
@@ -36,6 +38,9 @@ func Default() *Config {
 	return &Config{
 		Server: &Server{
 			Port: DefaultServerPort,
+		},
+		Store: &store.Config{
+			Driver: "file",
 		},
 	}
 }
