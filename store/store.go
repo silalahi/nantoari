@@ -1,10 +1,12 @@
 package store
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
-	// StoreDriverRedis is store driver using Redis
-	StoreDriverRedis = "redis"
+	// RedisStoreDriver is store driver using Redis
+	RedisStoreDriver = "redis"
 )
 
 // Interface is the store interface.
@@ -31,10 +33,10 @@ type Interface interface {
 	// Close() error
 }
 
-// New returns a store instance implementation from config
-func New(cfg *Config) (Interface, error) {
+// NewStore returns a store instance implementation from config
+func NewStore(cfg *Config) (Interface, error) {
 	switch cfg.Driver {
-	case StoreDriverRedis:
+	case RedisStoreDriver:
 		return NewRedisStore(&cfg.Redis)
 	}
 

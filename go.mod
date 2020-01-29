@@ -9,6 +9,7 @@ require (
 	github.com/leodido/go-urn v1.1.0 // indirect
 	github.com/onsi/ginkgo v1.11.0 // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
+	github.com/urfave/cli/v2 v2.1.1
 	gopkg.in/go-playground/validator.v9 v9.26.0
 	gopkg.in/yaml.v2 v2.2.4
 )

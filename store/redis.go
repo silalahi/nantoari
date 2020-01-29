@@ -1,10 +1,14 @@
 package store
 
-import "github.com/go-redis/redis"
+import (
+	"github.com/go-redis/redis"
+)
 
 // RedisStore is the Redis implementation of store.Interface.
 type RedisStore struct {
-	client *redis.Client
+	client     *redis.Client
+	expiration int    // currently no use
+	prefix     string // currently no use
 }
 
 // Get returns value for the given key.
@@ -30,5 +34,7 @@ func NewRedisStore(config *RedisConfig) (Interface, error) {
 		return nil, err
 	}
 
-	return r, nil
+	return &RedisStore{
+		client: r,
+	}, nil
 }
