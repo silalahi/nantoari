@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/silalahi/nantoari/server"
 	"github.com/silalahi/nantoari/store"
 	"gopkg.in/yaml.v2"
 )
@@ -21,23 +22,18 @@ var (
 	ErrFileFormatNotSupported = errors.New("config file format not supported")
 )
 
-// Server is a struct to configure server
-type Server struct {
-	Port int `yaml:"port"`
-}
-
 // Config is a struct to load application configuration
 type Config struct {
-	Debug  bool          `yaml:"debug"`
-	Server *Server       `yaml:"server"`
-	Store  *store.Config `yaml:"store"`
+	Debug  bool           `yaml:"debug"`
+	Server *server.Config `yaml:"server"`
+	Store  *store.Config  `yaml:"store"`
 }
 
 // Default returns a default config instance
 func Default() *Config {
 	return &Config{
-		Server: &Server{
-			Port: DefaultServerPort,
+		Server: &server.Config{
+			Port: server.DefaultServerPort,
 		},
 		Store: &store.Config{
 			Driver: "file",
