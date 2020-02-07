@@ -9,8 +9,8 @@ const (
 	RedisStoreDriver = "redis"
 )
 
-// Interface is the store interface.
-type Interface interface {
+// KV is the store interface.
+type KV interface {
 	// Get returns value for the given key.
 	Get(key string) (interface{}, error)
 
@@ -34,7 +34,7 @@ type Interface interface {
 }
 
 // NewStore returns a store instance implementation from config
-func NewStore(cfg *Config) (Interface, error) {
+func NewStore(cfg *Config) (KV, error) {
 	switch cfg.Driver {
 	case RedisStoreDriver:
 		return NewRedisStore(&cfg.Redis)

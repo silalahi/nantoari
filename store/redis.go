@@ -22,7 +22,7 @@ func (rs *RedisStore) Set(key string, value interface{}) error {
 }
 
 // NewRedisStore returns Redis client instance of store.Interface.
-func NewRedisStore(config *RedisConfig) (Interface, error) {
+func NewRedisStore(config *RedisConfig) (KV, error) {
 	r := redis.NewClient(&redis.Options{
 		Addr:     config.Addr(),
 		Password: config.Password,
