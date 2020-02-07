@@ -1,8 +1,10 @@
 package server
 
+import "fmt"
+
 const (
 	// DefaultServerPort is the default port of the application server
-	DefaultServerPort = 8080
+	DefaultServerPort = "8080"
 	// DefaultServerHost is the default host of the application server
 	DefaultServerHost = "localhost"
 )
@@ -10,7 +12,7 @@ const (
 // Config is a struct to configure server
 type Config struct {
 	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
+	Port string `yaml:"port"`
 }
 
 // DefaultConfig returns a default config instance
@@ -19,4 +21,9 @@ func DefaultConfig() *Config {
 		Host: DefaultServerHost,
 		Port: DefaultServerPort,
 	}
+}
+
+// Addr return HTTP address in string format
+func (c Config) Addr() string {
+	return fmt.Sprint(c.Host, ":", c.Port)
 }

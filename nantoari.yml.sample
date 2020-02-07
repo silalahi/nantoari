@@ -1,5 +1,6 @@
 debug: true
 server:
+    host: "localhost"
     port: 8000
 store:
     prefix: "nantoari"
