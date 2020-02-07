@@ -11,6 +11,9 @@ const (
 
 // KV is the store interface.
 type KV interface {
+	// SetPrefix sets KV prefix
+	SetPrefix(prefix string)
+
 	// Get returns value for the given key.
 	Get(key string) (interface{}, error)
 
@@ -33,11 +36,11 @@ type KV interface {
 	// Close() error
 }
 
-// NewStore returns a store instance implementation from config
-func NewStore(cfg *Config) (KV, error) {
+// New returns a store instance implementation from config
+func New(cfg *Config) (KV, error) {
 	switch cfg.Driver {
 	case RedisStoreDriver:
-		return NewRedisStore(&cfg.Redis)
+		return NewRedisStore(&cfg.Redis, cfg.Prefix)
 	}
 
 	return nil, fmt.Errorf("store driver %s does not exist", cfg.Driver)

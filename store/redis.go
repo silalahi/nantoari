@@ -4,29 +4,34 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// RedisStore is the Redis implementation of store.Interface.
+// RedisStore is the Redis implementation of KV.
 type RedisStore struct {
 	client     *redis.Client
-	expiration int    // currently no use
-	prefix     string // currently no use
+	expiration int
+	prefix     string
 }
 
 // Get returns value for the given key.
-func (rs *RedisStore) Get(key string) (interface{}, error) {
-	return rs.client.Get(key).Result()
+func (r *RedisStore) Get(key string) (interface{}, error) {
+	return r.client.Get(key).Result()
 }
 
 // Set returns value for the given key.
-func (rs *RedisStore) Set(key string, value interface{}) error {
-	return rs.client.Set(key, value, 0).Err()
+func (r *RedisStore) Set(key string, value interface{}) error {
+	return r.client.Set(key, value, 0).Err()
+}
+
+// SetPrefix sets KV prefix
+func (r *RedisStore) SetPrefix(prefix string) {
+	r.prefix = prefix
 }
 
 // NewRedisStore returns Redis client instance of store.Interface.
-func NewRedisStore(config *RedisConfig) (KV, error) {
+func NewRedisStore(cfg *RedisConfig, prefix string) (KV, error) {
 	r := redis.NewClient(&redis.Options{
-		Addr:     config.Addr(),
-		Password: config.Password,
-		DB:       config.DB,
+		Addr:     cfg.Addr(),
+		Password: cfg.Password,
+		DB:       cfg.DB,
 	})
 
 	_, err := r.Ping().Result()
@@ -35,6 +40,8 @@ func NewRedisStore(config *RedisConfig) (KV, error) {
 	}
 
 	return &RedisStore{
-		client: r,
+		client:     r,
+		expiration: cfg.Expiration,
+		prefix:     prefix,
 	}, nil
 }
