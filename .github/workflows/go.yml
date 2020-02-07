@@ -17,6 +17,7 @@ jobs:
     - name: Build
       run: |
         export GO111MODULE=on
+        export PATH=$PATH:$(go env GOPATH)/bin   
         GOOS=linux GOARCH=amd64 go build -o bin/nantoari-linux-amd64 cmd/nantoari/main.go
     - name: upload artifacts
       uses: actions/upload-artifact@master
