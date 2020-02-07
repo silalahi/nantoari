@@ -16,8 +16,13 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Get dependencies
-      run: go mod download
-
     - name: Build
-      run: go build -v .
+      run: |
+        export GO111MODULE=on
+        GOOS=linux GOARCH=amd64 go build -o bin/ci-test-linux-amd64
+        
+    - name: upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: binaries
+        path: bin/
