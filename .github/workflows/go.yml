@@ -1,10 +1,47 @@
 name: Go
+
 on: [push]
+
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13.x
+    
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install golangci-lint
+      run: |
+        go get github.com/golangci/golangci-lint/cmd/golangci-lint
+    
+    - name: Run linters
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin   
+        ./pre-commit
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      if: success()
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13.x
+        
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run tests
+      run: go test -v -covermode=count 
 
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: [lint, test]
     steps:
 
     - name: Set up Go 1.13
@@ -19,7 +56,7 @@ jobs:
     - name: Build
       run: |
         export GO111MODULE=on
-        GOOS=linux GOARCH=amd64 go build -o bin/ci-test-linux-amd64
+        GOOS=linux GOARCH=amd64 go build -o bin/nantoari-linux-amd64
         
     - name: upload artifacts
       uses: actions/upload-artifact@master
