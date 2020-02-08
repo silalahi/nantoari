@@ -39,6 +39,15 @@ func (s *Server) Init() error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
+	for _, r := range pprofRoutes {
+		switch r.Method {
+		case "GET":
+			s.http.GET(r.Path, r.Handler)
+		case "POST":
+			s.http.POST(r.Path, r.Handler)
+		}
+	}
+
 	return nil
 }
 

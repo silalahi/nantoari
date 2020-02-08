@@ -40,7 +40,7 @@ type KV interface {
 func New(cfg *Config) (KV, error) {
 	switch cfg.Driver {
 	case RedisStoreDriver:
-		return NewRedisStore(&cfg.Redis, cfg.Prefix)
+		return RedisWithConfig(&cfg.Redis)
 	}
 
 	return nil, fmt.Errorf("store driver %s does not exist", cfg.Driver)

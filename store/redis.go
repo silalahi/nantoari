@@ -26,8 +26,8 @@ func (r *RedisStore) SetPrefix(prefix string) {
 	r.prefix = prefix
 }
 
-// NewRedisStore returns Redis client instance of store.Interface.
-func NewRedisStore(cfg *RedisConfig, prefix string) (KV, error) {
+// RedisWithConfig returns Redis client instance of store.Interface.
+func RedisWithConfig(cfg *RedisConfig) (KV, error) {
 	r := redis.NewClient(&redis.Options{
 		Addr:     cfg.Addr(),
 		Password: cfg.Password,
@@ -42,6 +42,6 @@ func NewRedisStore(cfg *RedisConfig, prefix string) (KV, error) {
 	return &RedisStore{
 		client:     r,
 		expiration: cfg.Expiration,
-		prefix:     prefix,
+		prefix:     "",
 	}, nil
 }
