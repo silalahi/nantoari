@@ -11,3 +11,6 @@
 - Simple middleware to store total hit or request in Redis
 
 
+GET /:uuid -> Retrieve JSON
+POST / -> (Post CSV file and convert to JSON) -> Return UUID
+GET /:uuid/stats
