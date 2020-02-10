@@ -5,15 +5,12 @@ import (
 )
 
 const (
-	// RedisStoreDriver is store driver using Redis
-	RedisStoreDriver = "redis"
+	// RedisDriver is store driver using Redis
+	RedisDriver = "redis"
 )
 
 // KV is the store interface.
 type KV interface {
-	// SetPrefix sets KV prefix
-	SetPrefix(prefix string)
-
 	// Get returns value for the given key.
 	Get(key string) (interface{}, error)
 
@@ -39,8 +36,8 @@ type KV interface {
 // New returns a store instance implementation from config
 func New(cfg *Config) (KV, error) {
 	switch cfg.Driver {
-	case RedisStoreDriver:
-		return RedisWithConfig(&cfg.Redis)
+	case RedisDriver:
+		return NewRedisStore(&cfg.Redis)
 	}
 
 	return nil, fmt.Errorf("store driver %s does not exist", cfg.Driver)
