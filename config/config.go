@@ -29,18 +29,6 @@ type Config struct {
 	Store  *store.Config  `yaml:"store"`
 }
 
-// Default returns a default config instance
-func Default() *Config {
-	return &Config{
-		Server: &server.Config{
-			Port: server.DefaultServerPort,
-		},
-		Store: &store.Config{
-			Driver: "file",
-		},
-	}
-}
-
 // Load creates a Config struct from a config file path
 func Load(path string) (*Config, error) {
 	if !IsValidFile(path) {
