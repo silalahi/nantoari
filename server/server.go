@@ -33,20 +33,22 @@ func (s *Server) Init() error {
 	s.http.Use(middleware.Recover())
 	s.http.Use(middleware.Logger())
 
-	// TODO: enable pprof http. currently we must create http handler wrapper
-
 	s.http.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	for _, r := range pprofRoutes {
-		switch r.Method {
-		case "GET":
-			s.http.GET(r.Path, r.Handler)
-		case "POST":
-			s.http.POST(r.Path, r.Handler)
-		}
-	}
+	pr := pprofRoutes[0]
+	s.http.GET(pr.Path, pr.Handler)
+
+
+	//for _, r := range pprofRoutes {
+	//	switch r.Method {
+	//	case "GET":
+	//		s.http.GET(r.Path, r.Handler)
+	//	case "POST":
+	//		s.http.POST(r.Path, r.Handler)
+	//	}
+	//}
 
 	return nil
 }
