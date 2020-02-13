@@ -1,4 +1,4 @@
-package files
+package file
 
 import (
 	"net/http"
@@ -23,23 +23,8 @@ type (
 	}
 )
 
-// HTTPHandler contain HTTP handler for File
-type HTTPHandler struct {
-	u Usecase
-}
-
-// NewHTTPHandler returns an instance of HTTPHandler
-func NewHTTPHandler(e *echo.Echo, u Usecase) {
-	h := HTTPHandler{
-		u: u,
-	}
-
-	e.GET("/:uuid", h.Get)
-	e.POST("/", h.Set)
-}
-
-// Get handles GET request
-func (h *HTTPHandler) Get(c echo.Context) error {
+// HttpGetHandler handles GET request
+func HttpGetHandler(c echo.Context) error {
 	param := c.Param("uuid")
 	id, err := uuid.Parse(param)
 	if err != nil {
@@ -48,7 +33,7 @@ func (h *HTTPHandler) Get(c echo.Context) error {
 		})
 	}
 
-	file, err := h.u.Get(id)
+	file, err := Get(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
@@ -66,7 +51,7 @@ func (h *HTTPHandler) Get(c echo.Context) error {
 }
 
 // Set handles POST request
-func (h *HTTPHandler) Set(c echo.Context) (err error) {
+func HttpSetHandler(c echo.Context) (err error) {
 	req := new(request)
 	if err = c.Bind(req); err != nil {
 		return
@@ -86,7 +71,7 @@ func (h *HTTPHandler) Set(c echo.Context) (err error) {
 		})
 	}
 
-	if err := h.u.Set(file); err != nil {
+	if err := Set(file); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"message": err.Error(),
 		})

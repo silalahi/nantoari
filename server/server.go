@@ -1,15 +1,21 @@
 package server
 
 import (
-	"net/http"
+	"context"
+	"github.com/silalahi/nantoari/file"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/silalahi/nantoari/store"
 )
 
 type Server struct {
 	http *echo.Echo
 	config *Config
+	db *store.KV
 }
 
 func New(cfg *Config) (*Server, error) {
@@ -26,6 +32,10 @@ func New(cfg *Config) (*Server, error) {
 	return server, nil
 }
 
+func (s *Server) UseStore(db store.KV) {
+	s.db = &db
+}
+
 func (s *Server) Init() error {
 	s.http.HideBanner = true
 	s.http.Debug = true
@@ -33,49 +43,31 @@ func (s *Server) Init() error {
 	s.http.Use(middleware.Recover())
 	s.http.Use(middleware.Logger())
 
-	s.http.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-
-	pr := pprofRoutes[0]
-	s.http.GET(pr.Path, pr.Handler)
-
-
-	//for _, r := range pprofRoutes {
-	//	switch r.Method {
-	//	case "GET":
-	//		s.http.GET(r.Path, r.Handler)
-	//	case "POST":
-	//		s.http.POST(r.Path, r.Handler)
-	//	}
-	//}
+	s.http.GET("/:uuid", file.HttpGetHandler)
+	s.http.POST("/", file.HttpSetHandler)
 
 	return nil
 }
 
 func (s *Server) Run() error {
-	s.http.Logger.Fatal(s.http.Start(s.config.Addr()))
+	go func() {
+		if err := s.http.Start(s.config.Addr()); err != nil {
+			s.http.Logger.Info("shutting down the server")
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := s.http.Shutdown(ctx); err != nil {
+		s.http.Logger.Fatal(err)
+	}
+
+	<-ctx.Done()
 
 	return nil
 }
-
-// func (s *Server) Run() error {
-// 	go func() {
-// 		if err := srv.Start(":" + os.Getenv("APP_PORT")); err != nil {
-// 			srv.Logger.Info("shutting down the server")
-// 		}
-// 	}()
-
-// 	quit := make(chan os.Signal)
-// 	signal.Notify(quit, os.Interrupt)
-// 	<-quit
-
-// 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-// 	defer cancel()
-
-// 	if err := srv.Shutdown(ctx); err != nil {
-// 		srv.Logger.Fatal(err)
-// 	}
-
-// 	<-ctx.Done()
-// }

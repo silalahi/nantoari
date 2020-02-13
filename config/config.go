@@ -20,6 +20,8 @@ var (
 
 	// ErrFileFormatNotSupported error when config file format not supported
 	ErrFileFormatNotSupported = errors.New("config file format not supported")
+	// ErrFileNotExists error when config file does not exists
+	ErrFileNotExists = errors.New("config file does not exists")
 )
 
 // Config is a struct to load application configuration
@@ -31,7 +33,10 @@ type Config struct {
 
 // Load creates a Config struct from a config file path
 func Load(path string) (*Config, error) {
-	if !IsValidFile(path) {
+	if !IsFileExists(path) {
+		return nil, ErrFileNotExists
+	}
+	if !IsFileValid(path) {
 		return nil, ErrFileFormatNotSupported
 	}
 
@@ -52,10 +57,21 @@ func Load(path string) (*Config, error) {
 	return &cfg, nil
 }
 
+// IsFileExists return whether the config file is exists
+func IsFileExists(path string) bool {
+	if path == "" {
+		return false
+	}
+	if _, err := os.Stat(path); err != nil {
+		return false
+	}
+	return true
+}
+
 // IsValidFile returns whether file name f is one of the supported
 // config formats.
-func IsValidFile(f string) bool {
-	ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(f), "."))
+func IsFileValid(path string) bool {
+	ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(path), "."))
 	_, valid := ValidFileExtensions[ext]
 	return valid
 }

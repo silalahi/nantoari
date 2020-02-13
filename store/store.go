@@ -30,7 +30,7 @@ type KV interface {
 	// Keys(pattern string) ([]interface{}, error)
 
 	// Close closes the connection to the store.
-	// Close() error
+	Close() error
 }
 
 // New returns a store instance implementation from config

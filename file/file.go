@@ -1,4 +1,4 @@
-package files
+package file
 
 import (
 	"encoding/csv"
@@ -16,18 +16,6 @@ var (
 	// ErrInvalidFileFormat is an error when the given file is not match with expected
 	ErrInvalidFileFormat = errors.New("invalid file format")
 )
-
-// Repository represent the file's repository contract
-type Repository interface {
-	Get(uuid uuid.UUID) (File, error)
-	Set(file File) error
-}
-
-// Usecase represent the file's usecases
-type Usecase interface {
-	Get(uuid uuid.UUID) (File, error)
-	Set(file File) error
-}
 
 // File represent UUID and URL of file paired
 type File struct {

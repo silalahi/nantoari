@@ -26,6 +26,11 @@ func (r *RedisStore) SetPrefix(prefix string) {
 	r.prefix = prefix
 }
 
+// Close closes client connection
+func (r *RedisStore) Close() error {
+	return r.client.Close()
+}
+
 // NewRedisStore returns Redis client instance of store.Interface.
 func NewRedisStore(cfg *RedisConfig) (KV, error) {
 	r := redis.NewClient(&redis.Options{
