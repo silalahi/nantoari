@@ -5,10 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	validator "gopkg.in/go-playground/validator.v9"
 )
-
-var v = validator.New()
 
 type (
 	// HTTP Request
@@ -23,8 +20,8 @@ type (
 	}
 )
 
-// HttpGetHandler handles GET request
-func HttpGetHandler(c echo.Context) error {
+// HTTPGetHandler handles GET request
+func HTTPGetHandler(c echo.Context) error {
 	param := c.Param("uuid")
 	id, err := uuid.Parse(param)
 	if err != nil {
@@ -50,15 +47,15 @@ func HttpGetHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-// Set handles POST request
-func HttpSetHandler(c echo.Context) (err error) {
+// HTTPSetHandler handles POST request
+func HTTPSetHandler(c echo.Context) (err error) {
 	req := new(request)
 	if err = c.Bind(req); err != nil {
 		return
 	}
-	if err = v.Struct(req); err != nil {
-		return
-	}
+	// if err = v.Struct(req); err != nil {
+	// 	return
+	// }
 
 	file := File{
 		url:  req.URL,

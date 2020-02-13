@@ -43,8 +43,8 @@ func (s *Server) Init() error {
 	s.http.Use(middleware.Recover())
 	s.http.Use(middleware.Logger())
 
-	s.http.GET("/:uuid", file.HttpGetHandler)
-	s.http.POST("/", file.HttpSetHandler)
+	s.http.GET("/:uuid", file.HTTPGetHandler)
+	s.http.POST("/", file.HTTPSetHandler)
 
 	return nil
 }
